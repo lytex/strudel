@@ -136,7 +136,22 @@ export const resetLoadedSounds = () => soundMap.set({});
 let audioContext;
 
 export const setDefaultAudioContext = () => {
+  // const audio = document.createElement('audio');
+  const audio = new Audio();
+  (async () => await navigator.mediaDevices.getUserMedia({ audio: true, video: false }))();
+  let inter = (async () => await navigator.mediaDevices.enumerateDevices())();
+  debugger;
+  let foo = inter.then( (devices) => {debugger; return devices.filter((x) => x.label == 'Loopback Pro' && x.kind == 'audiooutput')});
+  foo.then((device) => audio.setSinkId(device[0].deviceId))
+  debugger;
+  // inter.then( (devices) => devices.filter((x) => x.label == 'Loopback Pro' && x.kind == 'audiooutput').then(
+  //   async (deviceId) => await audio.setSinkId(deviceId[0].deviceId),
+  // ));
   audioContext = new AudioContext();
+  debugger;
+  console.log(audioContext.sampleRate);        // actual sample rate being used
+  console.log(audioContext.destination.maxChannelCount); // maximum available channels
+  debugger;
   return audioContext;
 };
 

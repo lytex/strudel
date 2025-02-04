@@ -27,6 +27,15 @@
         registerSynthSounds,
       } from 'https://cdn.skypack.dev/@strudel/webaudio@0.11.0';
 
+
+    // const audio = document.createElement('audio');
+    const audio = new Audio();
+    await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+    let devices = await navigator.mediaDevices.enumerateDevices();
+    console.log(devices);
+    let deviceId = devices.filter((x) => x.label == 'Loopback Pro' && x.kind == 'audiooutput')[0].deviceId;
+    await audio.setSinkId(deviceId);
+    debugger;
       const ctx = getAudioContext();
       const input = document.getElementById('text');
       input.innerHTML = getTune();

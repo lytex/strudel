@@ -171,12 +171,21 @@ export const getAudioDevices = async () => {
 };
 
 export const setAudioDevice = async (id) => {
+  // const audio = document.createElement('audio');
+  const audio = new Audio();
+  await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+  let devices = await navigator.mediaDevices.enumerateDevices();
+  console.log(devices);
+  let deviceId = devices.filter((x) => x.label == 'Loopback Pro' && x.kind == 'audiooutput')[0].deviceId;
+  await audio.setSinkId(deviceId);
+  debugger;
   let audioCtx = getAudioContext();
   if (audioCtx.sinkId === id) {
     return;
   }
   await audioCtx.suspend();
   await audioCtx.close();
+
   audioCtx = setDefaultAudioContext();
   await audioCtx.resume();
   const isValidID = (id ?? '').length > 0;
@@ -187,7 +196,7 @@ export const setAudioDevice = async (id) => {
       logger('failed to set audio interface', 'warning');
     }
   }
-  initializeAudioOutput();
+  await initializeAudioOutput();
 };
 
 export function setVersionDefaultsFrom(code) {
